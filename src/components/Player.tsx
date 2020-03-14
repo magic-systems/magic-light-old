@@ -27,7 +27,7 @@ return (async () => {
 class Player extends React.PureComponent<IProps> {
   _onLoad(e: any) {
     const win = e.currentTarget.contentWindow;
-    win.updateCurrentLine = this.props.updateCurrentLine;
+    win._updateCurrentLine = this.props.updateCurrentLine;
 
     try {
       const code = createCode(this.props.code);
@@ -75,7 +75,7 @@ function createCode(originalCode: string) {
       }
 
       const pre = originalCode.substring(previous.end, node.start);
-      const trace = `updateCurrentLine(${node.loc.start.line}, ${node.loc.end.line});`
+      const trace = `_updateCurrentLine(${node.loc.start.line}, ${node.loc.end.line});`
       const body = originalCode.substring(node.start, node.end);
       code += `${pre}\n${trace}\n${body}`;
 
@@ -83,7 +83,7 @@ function createCode(originalCode: string) {
     });
 
     code += originalCode.substring(previous.end, result.end);
-    code += `updateCurrentLine(${result.loc.end.line}, ${result.loc.end.line});`
+    code += `_updateCurrentLine(${result.loc.end.line}, ${result.loc.end.line});`
 
     return code;
   } catch (_) {
