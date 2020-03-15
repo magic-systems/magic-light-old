@@ -40,8 +40,8 @@ class Player extends React.PureComponent<IProps> {
 
   render() {
     // In order to clear the running function, we force to update.
-    const srcDoc = `<meta name="revised" content="${Date()}" />`;
-    return <iframe className="player" onLoad={this._onLoad.bind(this)} srcDoc={srcDoc} title="player"></iframe>
+    const url = `./player.html?${Date.now()}`
+    return <iframe className="player" onLoad={this._onLoad.bind(this)} src={url} title="player"></iframe>
   }
 }
 
