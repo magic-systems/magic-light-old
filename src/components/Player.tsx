@@ -16,6 +16,10 @@ interface IProps {
   updateCurrentLine: any,
 }
 
+interface IState {
+  srcDoc: string,
+}
+
 const TEMPLATE =
 `
 "use strict";
@@ -24,7 +28,18 @@ return (async () => {
 });
 `;
 
-class Player extends React.PureComponent<IProps> {
+class Player extends React.PureComponent<IProps, IState> {
+  constructor(props: IProps) {
+    super(props);
+    this.state = { srcDoc: "" };
+  }
+
+  async componentDidMount() {
+    const response = await fetch("./player.html");
+    const srcDoc = await response.text();
+    this.setState({ srcDoc });
+  }
+
   _onLoad(e: any) {
     const win = e.currentTarget.contentWindow;
     win._updateCurrentLine = this.props.updateCurrentLine;
@@ -40,8 +55,9 @@ class Player extends React.PureComponent<IProps> {
 
   render() {
     // In order to clear the running function, we force to update.
-    const url = `./player.html?${Date.now()}`
-    return <iframe className="player" onLoad={this._onLoad.bind(this)} src={url} title="player"></iframe>
+    const meta = `<meta name="revised" content="${Date()}" />`
+    const srcDoc = `${this.state.srcDoc}\n${meta}`;
+    return <iframe className="player" onLoad={this._onLoad.bind(this)} srcDoc={srcDoc} title="player"></iframe>
   }
 }
 

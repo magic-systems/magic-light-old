@@ -1,5 +1,8 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers";
-import { UpdateCodeAction, UpdateCurrentLineAction } from "./actions";
+import {
+  UpdateCodeAction,
+  UpdateCurrentLineAction,
+} from "./actions";
 
 export interface IState {
   code: string,
