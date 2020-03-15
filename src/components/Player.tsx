@@ -83,7 +83,7 @@ function createCode(originalCode: string) {
     });
 
     code += originalCode.substring(previous.end, result.end);
-    code += `_updateCurrentLine(${result.loc.end.line}, ${result.loc.end.line});`
+    code += `\n_updateCurrentLine(${result.loc.end.line}, ${result.loc.end.line});`
 
     return code;
   } catch (_) {
