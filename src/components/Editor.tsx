@@ -22,10 +22,10 @@ interface IState {
   codeEditor: any,
 }
 
-class Editor extends React.PureComponent<IProps, IState> {
+class Editor extends React.PureComponent<IProps & { className: string }, IState> {
   private _onChangeTimer: any;
 
-  constructor(props: IProps){
+  constructor(props: IProps & { className: string }){
     super(props);
     this.state = { codeEditor: null };
 
@@ -70,6 +70,8 @@ class Editor extends React.PureComponent<IProps, IState> {
   }
 
   render() {
+    const { className } = this.props;
+
 		const options = {
       autofocus: true,
   	  lineNumbers: true,
@@ -77,14 +79,14 @@ class Editor extends React.PureComponent<IProps, IState> {
       mode: "javascript",
 		};
 
-    return <React.Fragment>
+    return <section className={className}>
       <CodeMirror
         onChange={this._onChange}
         editorDidMount={this._onEditorDidMount}
         options={options}
       />
       { this._renderHighlighters() }
-    </React.Fragment>
+    </section>
   }
 }
 

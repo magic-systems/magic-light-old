@@ -14,6 +14,21 @@ export const UpdateCodeAction =
 export const UpdateCurrentLineAction =
   actionCreator.async<{ currentStartLine: number, currentEndLine: number }, {}, { error: any }>("UPDATE_CURRENT_LINE");
 
+export const AppendLogAction =
+  actionCreator.async<{ log: any }, { log: any }, { error: any }>("APPEND_LOG");
+
+export function appendLog(log: any) {
+  return async (dispatch: ThunkDispatch<TStore, void, AnyAction>, getState: () => TStore) => {
+    const params = { log };
+    try {
+      dispatch(AppendLogAction.started(params));
+      dispatch(AppendLogAction.done({ result: params, params}));
+    } catch (error) {
+      dispatch(AppendLogAction.failed({ error, params }));
+    }
+  }
+}
+
 export function updateCode(code: string, cursor: any, cursorPosition: any, token: any) {
   return async (dispatch: ThunkDispatch<TStore, void, AnyAction>, getState: () => TStore) => {
     const params = {code, cursor, cursorPosition, token};

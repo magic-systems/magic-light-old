@@ -4,7 +4,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 
 import { TStore } from "../store";
-import { updateCurrentLine } from "../actions";
+import { appendLog, updateCurrentLine } from "../actions";
 
 import "./Player.css";
 
@@ -13,6 +13,7 @@ const walker = require("acorn-walk")
 
 interface IProps {
   code: string,
+  appendLog: any,
   updateCurrentLine: any,
 }
 
@@ -24,12 +25,16 @@ const TEMPLATE =
 `
 "use strict";
 return (async () => {
-  $code
+  try {
+    $code
+  } catch (e) {
+    console.error(e);
+  }
 });
 `;
 
-class Player extends React.PureComponent<IProps, IState> {
-  constructor(props: IProps) {
+class Player extends React.PureComponent<IProps & { className: string }, IState> {
+  constructor(props: IProps & { className: string }) {
     super(props);
     this.state = { srcDoc: "" };
   }
@@ -40,24 +45,32 @@ class Player extends React.PureComponent<IProps, IState> {
     this.setState({ srcDoc });
   }
 
-  _onLoad(e: any) {
-    const win = e.currentTarget.contentWindow;
+  _onLoad(event: any) {
+    const win = event.currentTarget.contentWindow;
     win._updateCurrentLine = this.props.updateCurrentLine;
+    win.console.error = (e: any) => {
+      this.props.appendLog({ type: "error", message: e.message });
+    }
+    win.console.log = (message: string) => {
+      this.props.appendLog({ type: "log", message });
+    }
+
+    const code = createCode(this.props.code);
 
     try {
-      const code = createCode(this.props.code);
-      const executable = (new win.Function(TEMPLATE.replace("$code", code)))();
+      const func = new win.Function(TEMPLATE.replace("$code", code));
+      const executable = func();
       executable();
     } catch (e) {
-      console.error(e);
     }
   }
 
   render() {
+    const { className } = this.props;
     // In order to clear the running function, we force to update.
     const meta = `<meta name="revised" content="${Date()}" />`
     const srcDoc = `${this.state.srcDoc}\n${meta}`;
-    return <iframe className="player" onLoad={this._onLoad.bind(this)} srcDoc={srcDoc} title="player"></iframe>
+    return <iframe className={className} onLoad={this._onLoad.bind(this)} srcDoc={srcDoc} title="player"></iframe>
   }
 }
 
@@ -68,6 +81,9 @@ const mapStateToProps = (store: TStore) => {
 }
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<TStore, void, AnyAction>) => ({
+  appendLog: (log: any) => {
+    dispatch(appendLog(log));
+  },
   updateCurrentLine: (startLine: number, endLine: number) => {
     dispatch(updateCurrentLine(startLine, endLine));
   },

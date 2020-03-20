@@ -1,0 +1,20 @@
+.logs {
+  height: 100%;
+  overflow: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.logs li {
+  padding: 0.5vw 3vw;
+  border-bottom: 1px solid #d7d7db;
+}
+
+.logs .error {
+  color: #ff0039;
+}
+
+.logs .log {
+  color: #0c0c0d;
+}

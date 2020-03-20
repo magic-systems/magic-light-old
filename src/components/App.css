@@ -1,0 +1,26 @@
+.editor {
+  width: 100%;
+  height: calc(100% - 5em);
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.console {
+  width: 100%;
+  height: calc(5em - 1px);
+  position: absolute;
+  left: 0;
+  top: calc(100% - 5em);
+  border-top: 1px solid gray;
+  background-color: white;
+}
+
+.player {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  border: none;
+}
