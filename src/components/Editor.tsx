@@ -25,21 +25,18 @@ interface IState {
 class Editor extends React.PureComponent<IProps & { className: string }, IState> {
   private _onChangeTimer: any;
 
+  static getDerivedStateFromProps(nextProps: IProps, prevState: IState){
+    // Copy currentStartLine and currentEndLine to state.
+    return Object.assign(prevState, nextProps);
+  }
+
   constructor(props: IProps & { className: string }){
     super(props);
+
     this.state = { codeEditor: null };
 
     this._onChange = this._onChange.bind(this);
     this._onEditorDidMount = this._onEditorDidMount.bind(this);
-  }
-
-  _getHighlighterStyle(line: number) {
-    const { codeEditor } = this.state;
-    const bounds = codeEditor.cursorCoords({ line });
-    return {
-      top: `${bounds.top}px`,
-      height: `${bounds.bottom - bounds.top}px`,
-    };
   }
 
   _onChange(editor: any, data: any, code: string) {
@@ -53,20 +50,17 @@ class Editor extends React.PureComponent<IProps & { className: string }, IState>
     this.setState({ codeEditor });
   }
 
-  _renderHighlighters() {
-    const { codeEditor } = this.state;
-    if (!codeEditor) {
-      return null;
-    }
-
+  componentDidUpdate() {
     const { currentStartLine, currentEndLine } = this.props;
-    const marks = [];
+    const { codeEditor } = this.state;
+
+    for (let line = 0; line < codeEditor.lineCount(); line++) {
+      codeEditor.removeLineClass(line, "background", "current-line");
+    }
 
     for (let line = currentStartLine - 1; line < currentEndLine; line++) {
-      marks.push(<mark style={this._getHighlighterStyle(line)}></mark>);
+      codeEditor.addLineClass(line, "background", "current-line");
     }
-
-    return <section className="highlight-layer">{marks}</section>
   }
 
   render() {
@@ -85,7 +79,6 @@ class Editor extends React.PureComponent<IProps & { className: string }, IState>
         editorDidMount={this._onEditorDidMount}
         options={options}
       />
-      { this._renderHighlighters() }
     </section>
   }
 }
