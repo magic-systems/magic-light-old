@@ -1,1 +1,26 @@
 <!-- The program user makes will be run on this document -->
+<script>
+/**
+ * Change color gradually to given rgb by given duration.
+ * @param {Number} red (0 - 255)
+ * @param {Number} green (0 - 255)
+ * @param {Number} blue (0 - 255)
+ * @param {Number} duration (ms)
+ */
+async function on(red, green, blue, duration) {
+  const element = document.body;
+  const currentColor = getComputedStyle(element).backgroundColor;
+  const nextColor = `rgb(${red}, ${green}, ${blue}, 0.8)`;
+  const animation = element.animate(
+    {
+      backgroundColor: [currentColor, nextColor],
+    },
+    {
+      duration,
+    }
+  );
+
+  await animation.finished;
+  element.style.backgroundColor = nextColor;
+}
+</script>
