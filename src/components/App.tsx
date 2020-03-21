@@ -8,8 +8,8 @@ import "./App.css";
 const App: React.FC = () => {
   return (
     <React.Fragment>
-      <Editor className="editor"/>
       <Player className="player"/>
+      <Editor className="editor"/>
       <Console className="console"/>
     </React.Fragment>
   );
