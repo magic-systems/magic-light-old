@@ -25,11 +25,6 @@ interface IState {
 class Editor extends React.PureComponent<IProps & { className: string }, IState> {
   private _onChangeTimer: any;
 
-  static getDerivedStateFromProps(nextProps: IProps, prevState: IState){
-    // Copy currentStartLine and currentEndLine to state.
-    return Object.assign(prevState, nextProps);
-  }
-
   constructor(props: IProps & { className: string }){
     super(props);
 
