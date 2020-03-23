@@ -13,6 +13,8 @@ import "codemirror/lib/codemirror.css";
 import "./Editor.css";
 
 interface IProps {
+  currentLineAnimationDuration?: number,
+  currentLineColor?: string,
   currentStartLine: number,
   currentEndLine: number,
   onChange: any,
@@ -45,8 +47,16 @@ class Editor extends React.PureComponent<IProps & { className: string }, IState>
     this.setState({ codeEditor });
   }
 
-  componentDidUpdate() {
-    const { currentStartLine, currentEndLine } = this.props;
+  componentDidUpdate(prevProps: IProps) {
+    const {
+      currentLineColor: previousLineColor,
+    } = prevProps;
+    const {
+      currentLineAnimationDuration,
+      currentLineColor,
+      currentStartLine,
+      currentEndLine,
+    } = this.props;
     const { codeEditor } = this.state;
 
     for (let line = 0; line < codeEditor.lineCount(); line++) {
@@ -55,6 +65,28 @@ class Editor extends React.PureComponent<IProps & { className: string }, IState>
 
     for (let line = currentStartLine - 1; line < currentEndLine; line++) {
       codeEditor.addLineClass(line, "background", "current-line");
+    }
+
+    let opacity = 0.2;
+    let duration = 200;
+
+    if (currentLineAnimationDuration !== undefined && previousLineColor !== currentLineColor) {
+      duration = currentLineAnimationDuration;
+      opacity = 1;
+    }
+
+    const nodeList: NodeListOf<HTMLElement> = document.querySelectorAll(".current-line");
+    for (const element of nodeList) {
+      element.animate(
+        {
+          backgroundColor: [previousLineColor || "", currentLineColor || previousLineColor || ""],
+          opacity: [1 , opacity],
+        },
+        {
+          duration,
+          fill: "forwards",
+        }
+      );
     }
   }
 
@@ -80,6 +112,8 @@ class Editor extends React.PureComponent<IProps & { className: string }, IState>
 
 const mapStateToProps = (store: TStore) => {
   return {
+    currentLineAnimationDuration: store.state.currentLineAnimationDuration,
+    currentLineColor: store.state.currentLineColor,
     currentStartLine: store.state.currentStartLine,
     currentEndLine: store.state.currentEndLine,
   }

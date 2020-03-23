@@ -10,14 +10,3 @@
   height: 100%;
   background: transparent;
 }
-
-.current-line {
-  background-color: #ff1ad9;
-  animation: current-line 0.5s forwards;
-}
-
-@keyframes current-line {
-  to {
-    opacity: 0.2;
-  }
-}
