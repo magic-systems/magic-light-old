@@ -13,6 +13,18 @@ export const UpdateCodeAction =
   >("UPDATE_CODE");
 export const UpdateCurrentLineAction =
   actionCreator.async<{ currentStartLine: number, currentEndLine: number }, {}, { error: any }>("UPDATE_CURRENT_LINE");
+export const UpdateCurrentLineColorAction =
+  actionCreator.async<
+    {
+      currentLineAnimationDuration: number,
+      currentLineColor: string,
+    },
+    {
+      currentLineAnimationDuration: number,
+      currentLineColor: string,
+    },
+    { error: any }
+  >("UPDATE_CURRENT_LINE_COLOR");
 
 export const AppendLogAction =
   actionCreator.async<{ log: any }, { log: any }, { error: any }>("APPEND_LOG");
@@ -49,6 +61,24 @@ export function updateCurrentLine(currentStartLine: number, currentEndLine: numb
       dispatch(UpdateCurrentLineAction.done({ result: params, params}));
     } catch (error) {
       dispatch(UpdateCurrentLineAction.failed({ error, params }));
+    }
+  }
+}
+
+export function updateCurrentLineColor(
+  currentLineColor: string,
+  currentLineAnimationDuration: number,
+) {
+  return async (dispatch: ThunkDispatch<TStore, void, AnyAction>, getState: () => TStore) => {
+    const params = {
+      currentLineColor,
+      currentLineAnimationDuration,
+    };
+    try {
+      dispatch(UpdateCurrentLineColorAction.started(params));
+      dispatch(UpdateCurrentLineColorAction.done({ result: params, params}));
+    } catch (error) {
+      dispatch(UpdateCurrentLineColorAction.failed({ error, params }));
     }
   }
 }

@@ -4,7 +4,11 @@ import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 
 import { TStore } from "../store";
-import { appendLog, updateCurrentLine } from "../actions";
+import {
+  appendLog,
+  updateCurrentLine,
+  updateCurrentLineColor,
+} from "../actions";
 
 import "./Player.css";
 
@@ -15,6 +19,7 @@ interface IProps {
   code: string,
   appendLog: any,
   updateCurrentLine: any,
+  updateCurrentLineColor: any,
 }
 
 interface IState {
@@ -48,6 +53,8 @@ class Player extends React.PureComponent<IProps & { className: string }, IState>
   _onLoad(event: any) {
     const win = event.currentTarget.contentWindow;
     win._updateCurrentLine = this.props.updateCurrentLine;
+    win.updateCurrentLineColor = this.props.updateCurrentLineColor;
+
     win.console.error = (e: any) => {
       this.props.appendLog({ type: "error", message: e.message });
     }
@@ -86,6 +93,9 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<TStore, void, AnyAction>) =>
   },
   updateCurrentLine: (startLine: number, endLine: number) => {
     dispatch(updateCurrentLine(startLine, endLine));
+  },
+  updateCurrentLineColor: (currentLineColor: string, currentLineAnimationDuration: number) => {
+    dispatch(updateCurrentLineColor(currentLineColor, currentLineAnimationDuration));
   },
 });
 
