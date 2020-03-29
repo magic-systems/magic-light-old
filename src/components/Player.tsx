@@ -56,9 +56,11 @@ class Player extends React.PureComponent<IProps & { className: string }, IState>
     win.updateCurrentLineColor = this.props.updateCurrentLineColor;
 
     win.console.error = (e: any) => {
+      console.error(e);
       this.props.appendLog({ type: "error", message: e.message });
     }
     win.console.log = (content: any) => {
+      console.log(content);
       this.props.appendLog({ type: "log", message: content.toString() });
     }
 
