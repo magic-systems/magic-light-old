@@ -58,8 +58,8 @@ class Player extends React.PureComponent<IProps & { className: string }, IState>
     win.console.error = (e: any) => {
       this.props.appendLog({ type: "error", message: e.message });
     }
-    win.console.log = (message: string) => {
-      this.props.appendLog({ type: "log", message });
+    win.console.log = (content: any) => {
+      this.props.appendLog({ type: "log", message: content.toString() });
     }
 
     const code = createCode(this.props.code);
