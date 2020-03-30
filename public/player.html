@@ -9,6 +9,62 @@
  */
 async function on(red, green, blue, duration) {
   updateCurrentLineColor(`rgb(${red}, ${green}, ${blue})`, duration);
+
+  // rgb to hsv
+  const max = Math.max(red, green, blue);
+  const min = Math.min(red, green, blue);
+
+  let hue = 0;
+  let sat = 0;
+  let bri = 0;
+
+  if (max != min) {
+    if (max == red) {
+      hue = 60 * (green - blue) / (max - min);
+    } else if (max == green) {
+      hue = 60 * (blue - red) / (max - min) + 120;
+    } else if (max == blue) {
+      hue = 60 * (red - green) / (max - min) + 240;
+    }
+
+    sat = (max - min) / max * 255;
+  }
+
+  if (hue < 0){
+    hue = hue + 360;
+  }
+
+  hue =  Math.round(hue / 360 * 65535);
+  sat =  Math.round(sat);
+  bri =  max;
+
+  if (sat > 254) {
+    sat = 254;
+  }
+
+  if (bri > 254) {
+    bri = 254;
+  }
+
+  const params = {
+    on: true,
+    hue,
+    sat,
+    bri,
+    transitiontime: duration,
+  };
+  execute(1, params);
+
   return new Promise(r => setTimeout(r, duration));
+}
+
+async function off() {
+  _execute(1, { on: false });
+}
+
+async function execute(id, params) {
+  const url = `http://127.0.0.1:8000/api/newdeveloper/lights/${id}/state`;
+  const response = await fetch(url, { method: "PUT", body: JSON.stringify(params) });
+  console.log(await response.json());
 }
 </script>
