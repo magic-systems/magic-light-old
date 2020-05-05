@@ -62,7 +62,7 @@ class AppWithauth extends React.PureComponent<{},IState> {
     return (
       <div className="App">
         {authState === 'loading' && (<div>loading...</div>)}
-        {authState === 'signIn' && (<button onClick={() => Auth.federatedSignIn()}>Sign In</button>)}
+        {authState === 'signIn' && (<button onClick={() => Auth.federatedSignIn()}>Sign In :)</button>)}
         {authState === 'signedIn' && <App />}
       </div>
     );

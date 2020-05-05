@@ -9,7 +9,11 @@ import "./index.css";
 
 import Amplify from 'aws-amplify'
 import config from './aws-exports'
-Amplify.configure(config)
+
+let cofigureupdate: any = config;
+cofigureupdate.oauth.redirectSignIn = "https://d12k0vwzjdf4c7.cloudfront.net/";
+cofigureupdate.oauth.redirectSignOut = "https://d12k0vwzjdf4c7.cloudfront.net/";
+Amplify.configure(cofigureupdate)
 
 ReactDOM.render(
   <Provider store={store}>

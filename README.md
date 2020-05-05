@@ -19,3 +19,16 @@ await on(0, 255, 0, 500);
 2. amplify add auth
 3. amplify push
 4. npm install aws-amplify
+
+# hosting
+
+1. amplify add hosting //PROD (S3 with CloudFront using HTTPS)
+2. amplify publish
+3. s3のウェブサイトhostingを無効に
+4. croudfrontでorigin settingを修正
+   * Restrict Bucket Access -> yes
+   * Origin Access Identity -> Create a New Identity
+   * Grant Read Permissions on Bucket -> Yes, Update Bucket Policy
+5. amplify auth update
+   * edit redirect url
+
